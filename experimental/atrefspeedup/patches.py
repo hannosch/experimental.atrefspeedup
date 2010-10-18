@@ -30,6 +30,9 @@ def _optimizedQuery(self, uid, indexname, relationship):
     """query reference catalog for object matching the info we are
     given, returns brains
     """
+    if not uid: # pragma: no cover
+        return []
+
     _catalog = self._catalog
     indexes = _catalog.indexes
 
@@ -54,7 +57,7 @@ def _optimizedQuery(self, uid, indexname, relationship):
             rels = rel_unindex_get(r, ())
             if isinstance(rels, str) and rels == relationship:
                 result_rids.add(r)
-            elif relationship in rels:
+            elif relationship in rels: # pragma: no cover
                 result_rids.add(r)
 
     # Create brains
