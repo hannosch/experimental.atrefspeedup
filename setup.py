@@ -24,6 +24,10 @@ setup(name='experimental.atrefspeedup',
           'setuptools',
           'collective.testcaselayer',
           'Products.Archetypes',
+          'Products.CMFCore',
+          'Products.PloneTestCase',
+          # 'Products.ZCatalog', Zope 2.13+
+          'Zope2',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
