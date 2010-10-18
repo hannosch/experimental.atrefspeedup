@@ -10,3 +10,11 @@ suited for handling references.
 This project tries to work around some of the short comings of the internal
 implementation of the reference engine without changing the public API or
 making any other changes to the stored data.
+
+Development
+-----------
+
+The source code can be found at:
+http://bitbucket.org/hannosch/experimental.atrefspeedup
+
+If you encounter any issues, please contact hanno (at) jarn (dot) com.
