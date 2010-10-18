@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 version = '1.0a1'
 
@@ -16,7 +16,7 @@ setup(name='experimental.atrefspeedup',
       author_email='info@jarn.com',
       url='http://www.jarn.com/',
       license='GPL version 2',
-      packages=find_packages(exclude=['ez_setup']),
+      packages=['experimental', 'atrefspeedup'],
       namespace_packages=['experimental'],
       include_package_data=True,
       zip_safe=False,
