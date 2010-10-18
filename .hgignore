@@ -1,6 +1,7 @@
 bin
 coverage.xml
 develop-eggs
+dist
 eggs
 htmlcov
 parts
