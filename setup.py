@@ -22,6 +22,7 @@ setup(name='experimental.atrefspeedup',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'collective.testcaselayer',
           'Products.Archetypes',
       ],
       entry_points="""

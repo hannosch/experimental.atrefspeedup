@@ -1,14 +1,14 @@
-import unittest
+from .base import ATRefSpeedupTestCase
 
 
-class TestPatches(unittest.TestCase):
+class TestEngine(ATRefSpeedupTestCase):
 
-    def test_patches_applied(self):
+    def test_spam(self):
         pass
 
 
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(TestPatches))
+    suite.addTest(makeSuite(TestEngine))
     return suite
