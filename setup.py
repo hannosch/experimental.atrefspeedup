@@ -22,6 +22,7 @@ setup(name='experimental.atrefspeedup',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'Products.Archetypes',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
