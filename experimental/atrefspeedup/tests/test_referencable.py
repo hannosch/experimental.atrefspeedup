@@ -1,7 +1,7 @@
 from .base import ATRefSpeedupTestCase
 
 
-class TestEngine(ATRefSpeedupTestCase):
+class TestReferencable(ATRefSpeedupTestCase):
 
     def test_no_references(self):
         doc1 = self.portal.doc1
@@ -48,5 +48,5 @@ class TestEngine(ATRefSpeedupTestCase):
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
-    suite.addTest(makeSuite(TestEngine))
+    suite.addTest(makeSuite(TestReferencable))
     return suite
