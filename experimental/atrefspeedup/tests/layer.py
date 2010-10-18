@@ -14,6 +14,11 @@ class ATRefSpeedupLayer(BasePTCLayer):
         fiveconfigure.debug_mode = False
         ztc.installPackage("experimental.atrefspeedup", quiet=True)
 
+        self.loginAsPortalOwner()
+        self.portal.invokeFactory('Document', 'doc1')
+        self.portal.invokeFactory('Document', 'doc2')
+        self.portal.invokeFactory('Document', 'doc3')
+
     def beforeTearDown(self):
         pass
 
