@@ -8,7 +8,7 @@ class TestReferenceable(ATRefSpeedupTestCase):
         self.assertEquals(doc1.getRelatedItems(), [])
         self.assertEquals(doc1.getRawRelatedItems(), [])
         self.assertEquals(doc1.getReferences(), [])
-        self.assertEquals(doc1.getRelationships(), ['relatesTo'])
+        self.assertEquals(doc1.getRelationships(), [])
 
     def test_single_reference(self):
         doc1 = self.portal.doc1
