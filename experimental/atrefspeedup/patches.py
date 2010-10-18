@@ -1,13 +1,15 @@
+from Products.ZCatalog.Lazy import LazyMap
+
 
 def getReferences(self, object, relationship=None, targetObject=None):
     """return a collection of reference objects"""
     sID, sobj = self._uidFor(object)
     if targetObject:
         tID, tobj = self._uidFor(targetObject)
+        brains = self._queryFor(sID, tID, relationship)
     else:
-        tID, tobj = (None, None)
+        brains = self._optimizedQuery(sID, 'sourceUID', relationship)
 
-    brains = self._optimizedQuery(sID, tID, relationship)
     return self._resolveBrains(brains)
 
 
@@ -17,26 +19,47 @@ def getBackReferences(self, object, relationship=None, targetObject=None):
     sID, sobj = self._uidFor(object)
     if targetObject:
         tID, tobj = self._uidFor(targetObject)
+        brains = self._queryFor(tID, sID, relationship)
     else:
-        tID, tobj = (None, None)
+        brains = self._optimizedQuery(sID, 'targetUID', relationship)
 
-    brains = self._optimizedQuery(tID, sID, relationship)
     return self._resolveBrains(brains)
 
 
-def _optimizedQuery(self, sid, tid, relationship):
+def _optimizedQuery(self, uid, indexname, relationship):
     """query reference catalog for object matching the info we are
     given, returns brains
     """
-    query = {}
-    if sid:
-        query['sourceUID'] = sid
-    if tid:
-        query['targetUID'] = tid
-    if relationship:
-        query['relationship'] = relationship
+    _catalog = self._catalog
+    indexes = _catalog.indexes
 
-    return self.searchResults(query, merge=1)
+    # First get one or multiple record ids for the source/target uid index
+    rids = indexes[indexname]._index.get(uid, None)
+    if rids is None:
+        return []
+    elif isinstance(rids, int):
+        rids = [rids]
+    else:
+        rids = list(rids)
+
+    # As a second step make sure we only get references of the right type
+    # The unindex holds data of the type: [(-311870037, 'relatesTo')]
+    # The index holds data like: [('relatesTo', -311870037)]
+    if relationship is None:
+        result_rids = rids
+    else:
+        rel_unindex_get = indexes['relationship']._unindex.get
+        result_rids = set()
+        for r in rids:
+            rels = rel_unindex_get(r, ())
+            if isinstance(rels, str) and rels == relationship:
+                result_rids.add(r)
+            elif relationship in rels:
+                result_rids.add(r)
+
+    # Create brains
+    return LazyMap(_catalog.__getitem__,
+                   list(result_rids), len(result_rids))
 
 
 def apply():
