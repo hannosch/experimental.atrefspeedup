@@ -4,9 +4,12 @@ Changelog
 1.0a2 - unreleased
 ------------------
 
+- Support passing in a list of relationships into the `getReferences` and
+  `getBackReferences` methods.
+  [hannosch]
 
 1.0a1 - 2010-10-18
 ------------------
 
-* Initial implementation.
+- Initial implementation.
   [hannosch]
