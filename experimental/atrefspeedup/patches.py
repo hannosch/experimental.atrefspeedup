@@ -53,11 +53,13 @@ def _optimizedQuery(self, uid, indexname, relationship):
     else:
         rel_unindex_get = indexes['relationship']._unindex.get
         result_rids = set()
+        if isinstance(relationship, str):
+            relationship = set([relationship])
         for r in rids:
-            rels = rel_unindex_get(r, ())
-            if isinstance(rels, str) and rels == relationship:
-                result_rids.add(r)
-            elif relationship in rels: # pragma: no cover
+            rels = rel_unindex_get(r, set())
+            if isinstance(rels, str):
+                rels = set([rels])
+            if not rels.isdisjoint(relationship):
                 result_rids.add(r)
 
     # Create brains
