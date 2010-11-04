@@ -61,12 +61,17 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         self.assertEquals(self.rc.getBackReferences(doc1, 'relatesTo'), [])
         self.assertEquals(self.rc.getBackReferences(doc1, 'relatesTo', doc2),
                           [])
+        result = self.rc.getBackReferences(doc1, ['relatesTo', 'rel2'])
+        self.assertEquals(result, [])
+        result = self.rc.getBackReferences(doc1, ['relatesTo', 'rel2'], doc2)
+        self.assertEquals(result, [])
 
     def test_single(self):
         doc1 = self.portal.doc1
         doc2 = self.portal.doc2
         doc3 = self.portal.doc3
         doc1.setRelatedItems([doc2.UID()])
+        doc1.setRel2([doc3.UID()])
         result = self.rc.getBackReferences(doc2)
         self.assertEquals(result[0].getSourceObject(), doc1)
         result = self.rc.getBackReferences(doc2, 'relatesTo')
@@ -75,6 +80,11 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         self.assertEquals(result[0].getSourceObject(), doc1)
         result = self.rc.getBackReferences(doc2, 'relatesTo', doc3)
         self.assertEquals(result, [])
+
+        result = self.rc.getBackReferences(doc2, ['relatesTo', 'rel2'])
+        self.assertEquals(result[0].getSourceObject(), doc1)
+        result = self.rc.getBackReferences(doc2, ['relatesTo', 'rel2'], doc1)
+        self.assertEquals(result[0].getSourceObject(), doc1)
 
     def test_many(self):
         doc1 = self.portal.doc1
