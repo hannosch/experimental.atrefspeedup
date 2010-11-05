@@ -20,6 +20,8 @@ class TestGetReferences(ATRefSpeedupTestCase):
         result = self.rc.getReferences(doc1, ['relatesTo', 'rel2'], doc2)
         self.assertEquals(result, [])
 
+        self.assertEquals(doc1.getReferences(), [])
+
     def test_single(self):
         doc1 = self.portal.doc1
         doc2 = self.portal.doc2
@@ -33,6 +35,8 @@ class TestGetReferences(ATRefSpeedupTestCase):
         self.assertEquals(result[0].getTargetObject(), doc2)
         result = self.rc.getReferences(doc1, 'relatesTo', doc3)
         self.assertEquals(result, [])
+
+        self.assertEquals(doc1.getReferences()[0], doc2)
 
         doc1.setRel2([doc3.UID()])
         result = self.rc.getReferences(doc1, ['relatesTo', 'rel2'])
@@ -51,6 +55,8 @@ class TestGetReferences(ATRefSpeedupTestCase):
         doc1.setRelatedItems(uids)
         result = [r.getTargetObject() for r in self.rc.getReferences(doc1)]
         self.assertEquals(set(result), set([doc2, doc3]))
+
+        self.assertEquals(set(doc1.getReferences()), set([doc2, doc3]))
 
         doc1.setRel2([doc2.UID()])
         result = self.rc.getReferences(doc1, ['relatesTo', 'rel2'])
@@ -92,6 +98,8 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         result = self.rc.getBackReferences(doc1, ['relatesTo', 'rel2'], doc2)
         self.assertEquals(result, [])
 
+        self.assertEquals(doc1.getBackReferences(), [])
+
     def test_single(self):
         doc1 = self.portal.doc1
         doc2 = self.portal.doc2
@@ -106,6 +114,8 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         self.assertEquals(result[0].getSourceObject(), doc1)
         result = self.rc.getBackReferences(doc2, 'relatesTo', doc3)
         self.assertEquals(result, [])
+
+        self.assertEquals(doc2.getBackReferences('relatesTo')[0], doc1)
 
         doc1.setRel2([doc3.UID()])
         result = self.rc.getBackReferences(doc2, ['relatesTo', 'rel2'])
@@ -124,6 +134,8 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         self.assertEquals(set(result), set([doc1]))
         result = [r.getSourceObject() for r in self.rc.getBackReferences(doc3)]
         self.assertEquals(set(result), set([doc1]))
+
+        self.assertEquals(set(doc2.getBackReferences()), set([doc1]))
 
         uids2 = [doc1.UID(), doc2.UID()]
         doc3.setRel2(uids2)
