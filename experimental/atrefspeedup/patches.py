@@ -7,28 +7,26 @@ from Products.ZCatalog.Lazy import LazyMap
 def getReferences(self, object, relationship=None, targetObject=None,
                   objects=True):
     """return a collection of reference objects"""
-    sID, sobj = self._uidFor(object)
-    if targetObject:
-        tID, tobj = self._uidFor(targetObject)
-        brains = self._queryFor(sID, tID, relationship)
-    else:
-        brains = self._optimizedQuery(sID, 'sourceUID', relationship)
-
-    if objects:
-        return self._resolveBrains(brains)
-    return brains
+    return self._optimizedReferences(object, relationship=relationship,
+        targetObject=targetObject, objects=objects, attribute='sourceUID')
 
 
 def getBackReferences(self, object, relationship=None, targetObject=None,
                       objects=True):
     """return a collection of reference objects"""
     # Back refs would be anything that target this object
+    return self._optimizedReferences(object, relationship=relationship,
+        targetObject=targetObject, objects=objects, attribute='targetUID')
+
+
+def _optimizedReferences(self, object, relationship=None, targetObject=None,
+                         objects=True, attribute='sourceUID'):
     sID, sobj = self._uidFor(object)
     if targetObject:
         tID, tobj = self._uidFor(targetObject)
         brains = self._queryFor(tID, sID, relationship)
     else:
-        brains = self._optimizedQuery(sID, 'targetUID', relationship)
+        brains = self._optimizedQuery(sID, attribute, relationship)
 
     if objects:
         return self._resolveBrains(brains)
@@ -130,6 +128,7 @@ def apply():
     rc.getReferences = getReferences
     rc._old_getBackReferences = rc.getBackReferences
     rc.getBackReferences = getBackReferences
+    rc._optimizedReferences = _optimizedReferences
     rc._optimizedQuery = _optimizedQuery
 
     from Products.Archetypes.ReferenceEngine import Reference as rf
