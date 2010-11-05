@@ -1,3 +1,6 @@
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Products.CMFCore.utils import getToolByName
 from Products.ZCatalog.Lazy import LazyMap
 
 
@@ -67,6 +70,33 @@ def _optimizedQuery(self, uid, indexname, relationship):
                    list(result_rids), len(result_rids))
 
 
+def getSourceObject(self):
+    return self._optimizedGetObject(self.sourceUID)
+
+
+def getTargetObject(self):
+    return self._optimizedGetObject(self.targetUID)
+
+
+def _optimizedGetObject(self, uid):
+    tool = getToolByName(self, 'uid_catalog', None)
+    if tool is None:
+        return ''
+    tool = aq_inner(tool)
+    traverse = aq_parent(tool).unrestrictedTraverse
+
+    _catalog = tool._catalog
+    rids = _catalog.indexes['UID']._index.get(uid, None)
+    if isinstance(rids, int):
+        rids = (rids, )
+
+    for rid in rids:
+        path = _catalog.paths[rid]
+        obj = traverse(path, default=None)
+        if obj is not None:
+            return obj
+
+
 def apply():
     from Products.Archetypes.ReferenceEngine import ReferenceCatalog as rc
 
@@ -74,5 +104,12 @@ def apply():
     rc.getReferences = getReferences
     rc._old_getBackReferences = rc.getBackReferences
     rc.getBackReferences = getBackReferences
-
     rc._optimizedQuery = _optimizedQuery
+
+    from Products.Archetypes.ReferenceEngine import Reference as rf
+
+    rf._old_getTargetObject = rf.getTargetObject
+    rf.getTargetObject = getTargetObject
+    rf._old_getSourceObject = rf.getSourceObject
+    rf.getSourceObject = getSourceObject
+    rf._optimizedGetObject = _optimizedGetObject
