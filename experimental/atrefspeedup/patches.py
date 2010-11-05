@@ -24,7 +24,10 @@ def _optimizedReferences(self, object, relationship=None, targetObject=None,
     sID, sobj = self._uidFor(object)
     if targetObject:
         tID, tobj = self._uidFor(targetObject)
-        brains = self._queryFor(tID, sID, relationship)
+        if attribute == 'sourceUID':
+            brains = self._queryFor(sID, tID, relationship)
+        else:
+            brains = self._queryFor(tID, sID, relationship)
     else:
         brains = self._optimizedQuery(sID, attribute, relationship)
 
