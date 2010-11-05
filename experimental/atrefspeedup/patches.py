@@ -87,7 +87,7 @@ def getTargetObject(self):
 
 def _optimizedGetObject(self, uid):
     tool = getToolByName(self, 'uid_catalog', None)
-    if tool is None:
+    if tool is None: # pragma: no cover
         return ''
     tool = aq_inner(tool)
     traverse = aq_parent(tool).unrestrictedTraverse
