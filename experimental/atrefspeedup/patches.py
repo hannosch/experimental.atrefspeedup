@@ -4,7 +4,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.ZCatalog.Lazy import LazyMap
 
 
-def getReferences(self, object, relationship=None, targetObject=None):
+def getReferences(self, object, relationship=None, targetObject=None,
+                  objects=True):
     """return a collection of reference objects"""
     sID, sobj = self._uidFor(object)
     if targetObject:
@@ -13,10 +14,13 @@ def getReferences(self, object, relationship=None, targetObject=None):
     else:
         brains = self._optimizedQuery(sID, 'sourceUID', relationship)
 
-    return self._resolveBrains(brains)
+    if objects:
+        return self._resolveBrains(brains)
+    return brains
 
 
-def getBackReferences(self, object, relationship=None, targetObject=None):
+def getBackReferences(self, object, relationship=None, targetObject=None,
+                      objects=True):
     """return a collection of reference objects"""
     # Back refs would be anything that target this object
     sID, sobj = self._uidFor(object)
@@ -26,7 +30,9 @@ def getBackReferences(self, object, relationship=None, targetObject=None):
     else:
         brains = self._optimizedQuery(sID, 'targetUID', relationship)
 
-    return self._resolveBrains(brains)
+    if objects:
+        return self._resolveBrains(brains)
+    return brains
 
 
 def _optimizedQuery(self, uid, indexname, relationship):
@@ -97,6 +103,26 @@ def _optimizedGetObject(self, uid):
             return obj
 
 
+def getRefs(self, relationship=None, targetObject=None):
+    """get all the referenced objects for this object"""
+    tool = getToolByName(self, 'reference_catalog')
+    brains = tool.getReferences(self, relationship, targetObject=targetObject,
+                                objects=False)
+    if brains:
+        return [_optimizedGetObject(self, b.targetUID) for b in brains]
+    return []
+
+
+def getBRefs(self, relationship=None, targetObject=None):
+    """get all the back referenced objects for this object"""
+    tool = getToolByName(self, 'reference_catalog')
+    brains = tool.getBackReferences(self, relationship,
+                                    targetObject=targetObject, objects=False)
+    if brains:
+        return [_optimizedGetObject(self, b.sourceUID) for b in brains]
+    return []
+
+
 def apply():
     from Products.Archetypes.ReferenceEngine import ReferenceCatalog as rc
 
@@ -113,3 +139,12 @@ def apply():
     rf._old_getSourceObject = rf.getSourceObject
     rf.getSourceObject = getSourceObject
     rf._optimizedGetObject = _optimizedGetObject
+
+    from Products.Archetypes.Referenceable import Referenceable as ra
+
+    ra._old_getRefs = ra.getRefs
+    ra.getRefs = getRefs
+    ra.getReferences = getRefs
+    ra._old_getBRefs = ra.getBRefs
+    ra.getBRefs = getBRefs
+    ra.getBackReferences = getBRefs

@@ -4,6 +4,11 @@ Changelog
 1.0a3 - unreleased
 ------------------
 
+- Speed up `getReferences` and `getBackReferences` of `Referenceable` objects.
+  We no longer load the reference objects themselves but work directly with the
+  information on the brains.
+  [hannosch]
+
 - Speed up `getTargetObject` and `getSourceObject` on reference objects.
   [hannosch]
 
