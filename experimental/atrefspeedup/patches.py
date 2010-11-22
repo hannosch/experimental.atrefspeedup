@@ -93,7 +93,7 @@ def _optimizedGetObject(self, uid):
     traverse = aq_parent(tool).unrestrictedTraverse
 
     _catalog = tool._catalog
-    rids = _catalog.indexes['UID']._index.get(uid, None)
+    rids = _catalog.indexes['UID']._index.get(uid, ())
     if isinstance(rids, int):
         rids = (rids, )
 

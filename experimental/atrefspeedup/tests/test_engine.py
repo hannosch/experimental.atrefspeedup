@@ -79,6 +79,22 @@ class TestGetReferences(ATRefSpeedupTestCase):
         result = [r.getTargetObject() for r in result]
         self.assertEquals(set(result), set([doc2, doc3]))
 
+    def test_missing_uid_catalog_entry(self):
+        doc1 = self.portal.doc1
+        doc2 = self.portal.doc2
+        doc1.setRelatedItems([doc2.UID()])
+
+        result = [r.getTargetObject() for r in self.rc.getReferences(doc1)]
+        self.assertEquals(result, [doc2])
+
+        # Forcefully remove the target object from the uid catalog
+        uc = getToolByName(self.portal, 'uid_catalog')
+        uc.uncatalog_object(doc2._getURL())
+
+        references = self.rc.getReferences(doc1)
+        self.assertEquals(len(references), 1)
+        self.assertEquals(references[0].getTargetObject(), None)
+
 
 class TestGetBackReferences(ATRefSpeedupTestCase):
 
@@ -158,6 +174,22 @@ class TestGetBackReferences(ATRefSpeedupTestCase):
         result = self.rc.getBackReferences(doc2, ['relatesTo', 'rel2'])
         result = [r.getSourceObject() for r in result]
         self.assertEquals(set(result), set([doc1]))
+
+    def test_missing_uid_catalog_entry(self):
+        doc1 = self.portal.doc1
+        doc2 = self.portal.doc2
+        doc2.setRelatedItems([doc1.UID()])
+
+        result = [r.getSourceObject() for r in self.rc.getBackReferences(doc1)]
+        self.assertEquals(result, [doc2])
+
+        # Forcefully remove the target object from the uid catalog
+        uc = getToolByName(self.portal, 'uid_catalog')
+        uc.uncatalog_object(doc2._getURL())
+
+        references = self.rc.getBackReferences(doc1)
+        self.assertEquals(len(references), 1)
+        self.assertEquals(references[0].getSourceObject(), None)
 
 
 def test_suite():
