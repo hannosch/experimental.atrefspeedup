@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0a4 - unreleased
+1.0a4 - 2010-11-22
 ------------------
 
 - Deal gracefully with missing uid catalog entries for references.
