@@ -1,6 +1,9 @@
 Introduction
 ============
 
+*Note: This code has been merged into Products.Archetypes and will be part of
+any Plone 4.1 and later release.*
+
 At the heart of the Archetypes reference engine is the reference_catalog. This
 is a set of catalog indexes used to perform the actual query lookups.
 
@@ -15,6 +18,6 @@ Development
 -----------
 
 The source code can be found at:
-http://bitbucket.org/hannosch/experimental.atrefspeedup
+https://github.com/hannosch/experimental.atrefspeedup
 
 If you encounter any issues, please contact hanno (at) jarn (dot) com.
