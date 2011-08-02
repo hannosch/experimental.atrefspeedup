@@ -110,7 +110,8 @@ def getRefs(self, relationship=None, targetObject=None):
     brains = tool.getReferences(self, relationship, targetObject=targetObject,
                                 objects=False)
     if brains:
-        return [_optimizedGetObject(self, b.targetUID) for b in brains]
+        result = [_optimizedGetObject(self, b.targetUID) for b in brains]
+        return [r for r in result if r is not None]
     return []
 
 
@@ -120,7 +121,8 @@ def getBRefs(self, relationship=None, targetObject=None):
     brains = tool.getBackReferences(self, relationship,
                                     targetObject=targetObject, objects=False)
     if brains:
-        return [_optimizedGetObject(self, b.sourceUID) for b in brains]
+        result = [_optimizedGetObject(self, b.sourceUID) for b in brains]
+        return [r for r in result if r is not None]
     return []
 
 
