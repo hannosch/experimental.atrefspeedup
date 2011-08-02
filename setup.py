@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '1.0a5'
+version = '1.0a6'
 
 setup(name='experimental.atrefspeedup',
       version=version,
