@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0a5 - unreleased
+1.0a5 - 2011-08-02
 ------------------
 
 - Don't use `isdisjoint`, as it's not available on Python < 2.6.
