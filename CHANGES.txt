@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0a6 - unreleased
+1.0a6 - 2011-08-02
 ------------------
 
 - Protect against invalid references pointing to non-existent objects.
