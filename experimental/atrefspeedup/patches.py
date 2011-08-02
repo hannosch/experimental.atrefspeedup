@@ -69,7 +69,7 @@ def _optimizedQuery(self, uid, indexname, relationship):
             rels = rel_unindex_get(r, set())
             if isinstance(rels, str):
                 rels = set([rels])
-            if not rels.isdisjoint(relationship):
+            if len(rels.intersection(relationship)) > 0:
                 result_rids.add(r)
 
     # Create brains
